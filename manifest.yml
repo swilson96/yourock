@@ -1,0 +1,9 @@
+---
+applications:
+- name: You Rock
+  command: node app.js
+  memory: 256M
+  instances: 1
+  host: YouRock
+  domain: cfapps.io
+  path: .

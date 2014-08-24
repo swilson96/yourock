@@ -1,0 +1,11 @@
+div.tweet
+    div(class="float text")
+        a(href="http://twitter.com/#{user.screen_name}")
+            img(class="profileImage", src="#{user.profile_image_url}")
+    div.text
+        p
+            a(href="/#{user.screen_name}") #{user.name}
+        if (user.praise)
+            p Praises: #{user.praise.length}, Praised: #{user.praised.length}
+
+

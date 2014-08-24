@@ -1,0 +1,145 @@
+body {
+    padding: 0px;
+    margin: 0px;
+    font: 14px "Arial Black", "Arial Black", "Arial Black", sans-serif;
+}
+
+h1 {
+    font-size: 84px;
+    margin: 0px;
+    padding-bottom: 10px;
+}
+
+p {
+    padding: 4px;
+}
+
+a {
+    color: #A15140;
+}
+
+.container {
+    width: 100%;
+    height: 271px;
+}
+
+.header {
+    display: inline-block;
+    width: 100%;
+    height: 32px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.headerText {
+    border-bottom: 20px;
+    display: table-cell;
+    vertical-align: middle;
+    height: 32px;
+}
+
+.headerRight {
+    float: right;
+    display: inline-block;
+    margin: 2px;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.tweet {
+    font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
+    width: 100%;
+    float: left;
+    background: #FFF;
+    margin: 1px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #E2725B;
+}
+
+.tweet:hover {
+    background: #E2725B;
+}
+
+.faces {
+    width: 252px;
+}
+
+.profileImage {
+    margin: 1px;
+    height: 48px;
+    width: 48px;
+}
+
+.arrow {
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.from {
+    margin: 25px;
+}
+
+.to {
+    max-width: 100px;
+}
+
+.float {
+    float: left;
+}
+
+.text {
+    min-height: 50px;
+    padding-top: 25px;
+    padding-right: 25px;
+    padding-left: 25px;
+    padding-bottom: 2px;
+}
+
+.horizontalCenter {
+    margin-top: 25px;
+    margin-bottom: 25px;
+}
+
+.right {
+    float: right;
+}
+
+.time {
+    font-size: 10px;
+    margin-right: 25px;
+    margin-bottom: 15px;
+}
+
+.content {
+    max-width: 910px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.activity{
+    display: inline-block;
+    max-width: 600px;
+    min-width: 66%;
+    padding: 2px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.users {
+    display: inline-block;
+    width: 300px;
+    padding: 2px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.title {
+    height: 150px;
+    padding: 30px 50px 55px 50px;
+    color: white;
+    text-align: center;
+}

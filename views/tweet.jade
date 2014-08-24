@@ -1,0 +1,28 @@
+div.tweet
+    div.faces
+        div#from(class="float from")
+            a(href="http://twitter.com/#{tweet.user.screen_name}")
+                img(class="profileImage", src="#{tweet.user.profile_image_url}")
+        div.float
+            img(src="/images/arrow.png", class="profileImage arrow horizontalCenter")
+        if !to || to.length == 0
+            div#to(class="float to from horizontalCenter")
+                - var user = tweet.user
+                include profileImage
+        if to && to.length == 1
+            div#to(class="float to from horizontalCenter")
+                - var user = to[0]
+                include profileImage
+        if to && to.length > 1
+            if to.length == 2
+                div#to(class="float to horizontalCenter")
+                    each user in to
+                        include profileImage
+            if to.length > 2
+                div#to(class="float to")
+                    each user in to
+                        include profileImage
+
+    div
+        div#text.text #{tweet.text}
+        div#time.time(class="right time") #{tweet.created_at}

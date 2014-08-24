@@ -1,0 +1,30 @@
+doctype html
+html
+    head
+        title='#YouRock'
+        meta(name='description', content='Publicly praise your friends when they are awesome.')
+        meta(property='og:title', content='#YouRock: Publicly praise your friends when they are awesome.')
+        meta(property='og:type', content='website')
+        meta(property='og:image', content='/images/square.jpg')
+        meta(property='og:site-name', content='#YouRock')
+        meta(property='og:url', content='http://www.yourock.com')
+        meta(name='twitter:card', value='summary')
+        link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel='shortcut icon', href='/images/favicon.ico')
+    body(data-twttr-rendered='false')
+        div.container
+            div.header
+                div.headerRight
+                    a(href="https://twitter.com/YouRockSite", class="twitter-follow-button", data-show-count="false", data-size="large", data-dnt="true") Follow @YouRockSite
+                div.headerRight
+                    span.headerText To join in, just follow us on twitter!&nbsp;
+                script !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+
+            div.blog-cover(style="background-image:url('/images/rocks.jpg')")
+                section
+                    div.title
+                        h1 #YouRock
+                        h3 Publicly praise your friends when they are awesome.
+
+            div.content
+                block content

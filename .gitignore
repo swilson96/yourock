@@ -1,0 +1,7 @@
+node_modules
+npm-debug.log
+*.iml
+.idea
+newrelic_agent.log
+report
+public/bundles
