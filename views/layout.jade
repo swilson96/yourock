@@ -10,17 +10,30 @@ html
         meta(property='og:url', content='http://www.yourock.com')
         meta(name='twitter:card', value='summary')
         link(rel='stylesheet', href='/stylesheets/style.css')
+        link(rel="stylesheet", type="text/css", href="https://fonts.googleapis.com/css?family=Lato:300,400,700|Source+Code+Pro:300,400,700")
         link(rel='shortcut icon', href='/images/favicon.ico')
     body(data-twttr-rendered='false')
         div.container
             div.header
+                div.nav
+                    span.headerText
+                        a(href="#") Home
+                    span.headerText
+                        a(href="#about") About
+                    span.headerText
+                        a(href="#activity") Activity
+                    span.headerText
+                        a(href="#rockers") Top Rockers
+                    span.headerText
+                        a(href="#corporate") Corporate
+
                 div.headerRight
                     a(href="https://twitter.com/YouRockSite", class="twitter-follow-button", data-show-count="false", data-size="large", data-dnt="true") Follow @YouRockSite
                 div.headerRight
                     span.headerText To join in, just follow us on twitter!&nbsp;
                 script !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
 
-            div.blog-cover(style="background-image:url('/images/rocks.jpg')")
+            div.banner(style="background-image:url('/images/rocks.jpg')")
                 section
                     div.title
                         h1 #YouRock
@@ -28,3 +41,12 @@ html
 
             div.content
                 block content
+
+            footer.footer
+                div.footer-text
+                    | Site by&nbsp;
+                    a(href="http://swilson.co.uk") swilson.co.uk
+                    | &nbsp;#{(new Date()).getFullYear()}
+
+                block footer
+
