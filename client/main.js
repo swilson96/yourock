@@ -1,9 +1,5 @@
 var $ = require('jquery');
 
-$('#toast').click(function() {
-    this.toggle('slide');
-});
-
 var socket = io.connect(window.location.hostname);
 var alreadyConnected = false;
 
@@ -22,6 +18,10 @@ socket.on('connection', function (praises) {
         }
     }
     alreadyConnected = true;
+
+    $('button#close-toast').click(function() {
+        $('#toast').toggle('slide');
+    });
 });
 
 socket.on('data', function (data) {
@@ -52,10 +52,9 @@ var toast = function(data) {
     tweet.find('.text').html(data.htmlText);
     tweet.find('.time').text(formatTweetDate(data.tweet));
 
-    var toastDiv = $('#toast');
-    toastDiv.html('');
+    var toastContent = $('#toast-content');
+    toastContent.html('');
+    tweet.appendTo(toastContent);
 
-    tweet.appendTo(toastDiv);
-
-    toastDiv.toggle('slide');
+    $('#toast').toggle('slide');
 };

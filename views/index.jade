@@ -35,10 +35,15 @@ block content
         a(name="corporate")
         h2 Corporate
         p
-            | Do you want your very own praise machine for your team, company, club? Contact &nbsp;
+            | Do you want your very own praise machine for your team, company or club? Contact &nbsp;
             a(href="mailto:toast@softwire.com") toast@softwire.com
 
 
 block footer
-    div#toast.activity
+    div#toast.activity(style="display: none")
+        h3
+            | Someone just rocked!
+            div.float.right
+                button#close-toast close
+        div#toast-content
 
