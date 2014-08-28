@@ -9,7 +9,7 @@
     "test": "nodeunit"
   },
   "dependencies": {
-    "browserify": "5.9.1",
+    "browserify": "^5.10.1",
     "express": "3.4.x",
     "jade": "1.5.0",
     "jadeify": "2.5.0",
