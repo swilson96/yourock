@@ -5,7 +5,7 @@
   "scripts": {
     "watch": "watchify -t jadeify client/main.js -o public/bundles/main.js -v",
     "build": "browserify -t jadeify client/main.js -o public/bundles/main.js",
-    "start": "npm run watch & nodemon app.js",
+    "start": "npm run build & node app.js",
     "test": "nodeunit"
   },
   "dependencies": {
