@@ -4,4 +4,4 @@ npm-debug.log
 .idea
 newrelic_agent.log
 report
-public/bundles
+public/bundles/*
