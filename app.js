@@ -1,3 +1,5 @@
+"use strict";
+
 require('newrelic');
 
 var express = require('express');
@@ -34,8 +36,15 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/:username', profile.show);
 
-// Tear down DB connections on exit
+
 var tweetStore = require('./src/TweetStore');
+
+// Refresh users now, and set a regular refresh interval
+tweetStore.refreshUsers(function() {
+    setInterval(tweetStore.refreshUsers, 10 * 60 * 1000);
+});
+
+// Tear down DB connections on exit
 process.on('exit', function() {
     tweetStore.close();
 });

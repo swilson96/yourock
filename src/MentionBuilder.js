@@ -19,8 +19,8 @@ var MentionBuilder = function(mentions, callback) {
         var mention = this.mentions[this.mentionIndex];
         if (mention) {
             if (this.includeMention(mention)) {
-                twitter.showUser(this.mentions[this.mentionIndex].screen_name, function (err, users) {
-                    self.userFromTwitter(err, users);
+                twitter.showUser(this.mentions[this.mentionIndex].screen_name, function (err, user) {
+                    self.userFromTwitter(err, user);
                 });
             } else {
                 this.mentionIndex++;
@@ -31,12 +31,11 @@ var MentionBuilder = function(mentions, callback) {
         }
     };
 
-    this.userFromTwitter = function (err, users) {
+    this.userFromTwitter = function (err, user) {
         if (err) {
             console.log(err);
         }
-        // Assume one result, since we searched by username
-        this.detailedMentions.push(users[0]);
+        this.detailedMentions.push(user);
         this.mentionIndex++;
         this.addMentionChain();
     };
