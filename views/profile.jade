@@ -4,5 +4,10 @@ block content
     if(error != null)
         div.error #{error}
     include user
+    if (user.followsYouRock)
+        div
+            p #{user.screen_name} follows&nbsp;
+                a(href="https://twiter.com/YouRockSite") @YouRockSite
+                | &nbsp;on Twitter.
 
 

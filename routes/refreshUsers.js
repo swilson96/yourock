@@ -4,7 +4,8 @@ var tweetStore = require('../src/TweetStore');
 var getUserData = function(username, callback) {
     tweetStore.recentPraiseFrom(username, function(err1, praise) {
         tweetStore.recentPraiseTo(username, function(err2, praised) {
-            twitter.showUser(username, function (err3, user) {
+            twitter.showUser(username, function (err3, users) {
+                var user = users ? users[0] : undefined;
                 if (user) {
                     user.praise = praise;
                     user.praised = praised;

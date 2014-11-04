@@ -1,4 +1,5 @@
 var monk = require('monk');
+var _ = require('lodash-node');
 var twitter = require('../src/Twitter');
 
 var dbHolder;
@@ -8,6 +9,61 @@ var db = function() {
     }
     return dbHolder;
 };
+
+var decorateUser = function(user, callback) {
+    db().get('tweets').count({"tweet.user.screen_name": user.screen_name }, function(err, count) {
+        user.praiseCount = count;
+        db().get('tweets').count({"tweet.entities.user_mentions.screen_name": user.screen_name}, function(err, count) {
+            user.praisedCount = count;
+            callback(user);
+        });
+    });
+};
+
+var getDecoratedUser = function(id, callback) {
+    twitter.showUser(id, function(err, user) {
+        decorateUser(user, callback);
+    });
+}
+
+var getAllUsers = function(callback) {
+    db().get('users').find({}, {}, function(err, docs) {
+        if (err) {
+            console.error("[DB READ ERROR: USERS]" + err);
+        }
+        callback(err, docs);
+    })
+};
+
+var refreshUsers = function() {
+    twitter.getUsers(function(err, twitterIds) {
+        getAllUsers(function(err, oldUsers) {
+            oldUsers.forEach(function(oldUser) {
+                var match = _.find(twitterIds, function(id) { return id = oldUser.id});
+                if (match) {
+                    twitterIds = _.remove(twitterIds, function(id) { return id = oldUser.id})
+                    getDecoratedUser(match, function(decorated) {
+                        db().get('users').update({id: decorated.id}, decorated);
+                    })
+                } else {
+                    console.log(oldUser.screen_name + " has left us!");
+                    db().get('users').remove({id: oldUser.id}, { justOne: true });
+                }
+            });
+
+            twitterIds.forEach(function(id) {
+                getDecoratedUser(id, function(decorated) {
+                    console.log(decorated.screen_name + " has joined our mighty army");
+                    db().get('users').insert(decorated);
+                });
+            });
+
+            console.log("Users have been refreshed.");
+        });
+    });
+};
+
+setInterval(refreshUsers, 10 * 60 * 1000);
 
 module.exports = {
     storeTweet: function(tweet) {
@@ -34,6 +90,24 @@ module.exports = {
             });
         });
     },
+
+    getTopPraisers: function(limit, callback) {
+        db().get('users').find({}, {limit: limit, sort: { praise : -1 }}, function(err, docs) {
+            if (err) {
+                console.error("[DB READ ERROR: TOP PRAISERS] " + err);
+            }
+            callback(err, docs);
+        });
+    },
+    getTopPraised: function(limit, callback) {
+        db().get('users').find({}, {limit: limit, sort: { praised : -1 }}, function(err, docs) {
+            if (err) {
+                console.error("[DB READ ERROR: TOP PRAISED] " + err);
+            }
+            callback(err, docs);
+        });
+    },
+
     getRecentTweets: function(limit, callback) {
         db().get('tweets').find({}, { limit: limit, sort: { _id : -1 }}, function(err, docs) {
             if (err) {
@@ -58,6 +132,18 @@ module.exports = {
             callback(err, docs);
         });
     },
+
+    getAllUsers: getAllUsers,
+    getUser: function(username, callback) {
+        db().get('users').find({"screen_name": username}, {}, function(err, user) {
+            if (err) {
+                console.error("[DB READ ERROR: USER BY USERNAME " +  username + "]" + err);
+            }
+            callback(err, user[0]);
+        })
+    },
+    refreshUsers: refreshUsers,
+
     close: function() {
         db().close();
     }
