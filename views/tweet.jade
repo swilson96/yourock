@@ -1,28 +1,28 @@
-div.tweet
+div.tweet.box
     div.faces
-        div#from(class="float from")
+        div.float.from
             a(href="http://twitter.com/#{tweet.user.screen_name}")
-                img(class="profileImage", src="#{tweet.user.profile_image_url}")
+                img.profileImage(src="#{tweet.user.profile_image_url}")
         div.float
-            img(src="/images/arrow.png", class="profileImage arrow horizontalCenter")
+            img.profileImage.arrow.horizontalCenter(src="/images/arrow.png")
         if !to || to.length == 0
-            div#to(class="float to from horizontalCenter")
+            div.float.to.from.horizontalCenter
                 - var user = tweet.user
                 include profileImage
         if to && to.length == 1
-            div#to(class="float to from horizontalCenter")
+            div.float.to.from.horizontalCenter
                 - var user = to[0]
                 include profileImage
         if to && to.length > 1
             if to.length == 2
-                div#to(class="float to horizontalCenter")
+                div.float.to.horizontalCenter
                     each user in to
                         include profileImage
             if to.length > 2
-                div#to(class="float to")
+                div.class.float.to
                     each user in to
                         include profileImage
 
     div
-        div#text.text #{tweet.text}
-        div#time.time(class="right time") #{tweet.created_at}
+        div.text #{tweet.text}
+        div.right.time #{tweet.created_at}

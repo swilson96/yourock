@@ -1,17 +1,14 @@
 var tweetStore = require('../src/TweetStore');
-var mentionBuilder = require('../src/MentionBuilder');
 
 module.exports = {
     /*
      * GET home page.
      */
     index: function (req, res) {
-        tweetStore.getAllUsers(function(err, users) {
-            if (!users) {
-                users = [];
-            }
-
-            res.render('index', {users: users, error: err});
+        tweetStore.getTopPraised(5, function(err, praised) {
+            tweetStore.getTopPraisers(5, function(err, praisers) {
+                res.render('index', {users: [], topPraisers: praisers, topPraised: praised, error: err});
+            });
         });
     }
 };

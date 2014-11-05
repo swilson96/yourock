@@ -9472,16 +9472,16 @@ var buf = [];
 var jade_mixins = {};
 var jade_interp;
 ;var locals_for_with = (locals || {});(function (tweet, to) {
-buf.push("<div class=\"tweet\"><div class=\"faces\"><div id=\"from\" class=\"float from\"><a" + (jade.attr("href", "http://twitter.com/" + (tweet.user.screen_name) + "", true, false)) + "><img" + (jade.attr("src", "" + (tweet.user.profile_image_url) + "", true, false)) + " class=\"profileImage\"/></a></div><div class=\"float\"><img src=\"/images/arrow.png\" class=\"profileImage arrow horizontalCenter\"/></div>");
+buf.push("<div class=\"tweet box\"><div class=\"faces\"><div class=\"float from\"><a" + (jade.attr("href", "http://twitter.com/" + (tweet.user.screen_name) + "", true, false)) + "><img" + (jade.attr("src", "" + (tweet.user.profile_image_url) + "", true, false)) + " class=\"profileImage\"/></a></div><div class=\"float\"><img src=\"/images/arrow.png\" class=\"profileImage arrow horizontalCenter\"/></div>");
 if ( !to || to.length == 0)
 {
-buf.push("<div id=\"to\" class=\"float to from horizontalCenter\">");
+buf.push("<div class=\"float to from horizontalCenter\">");
 var user = tweet.user
 buf.push("<a" + (jade.attr("href", "http://twitter.com/" + (user.screen_name) + "", true, false)) + "><img" + (jade.attr("src", "" + (user.profile_image_url) + "", true, false)) + " class=\"profileImage\"/></a></div>");
 }
 if ( to && to.length == 1)
 {
-buf.push("<div id=\"to\" class=\"float to from horizontalCenter\">");
+buf.push("<div class=\"float to from horizontalCenter\">");
 var user = to[0]
 buf.push("<a" + (jade.attr("href", "http://twitter.com/" + (user.screen_name) + "", true, false)) + "><img" + (jade.attr("src", "" + (user.profile_image_url) + "", true, false)) + " class=\"profileImage\"/></a></div>");
 }
@@ -9489,7 +9489,7 @@ if ( to && to.length > 1)
 {
 if ( to.length == 2)
 {
-buf.push("<div id=\"to\" class=\"float to horizontalCenter\">");
+buf.push("<div class=\"float to horizontalCenter\">");
 // iterate to
 ;(function(){
   var $$obj = to;
@@ -9516,7 +9516,7 @@ buf.push("</div>");
 }
 if ( to.length > 2)
 {
-buf.push("<div id=\"to\" class=\"float to\">");
+buf.push("<div class=\"class float to\">");
 // iterate to
 ;(function(){
   var $$obj = to;
@@ -9542,6 +9542,6 @@ buf.push("<a" + (jade.attr("href", "http://twitter.com/" + (user.screen_name) + 
 buf.push("</div>");
 }
 }
-buf.push("</div><div><div id=\"text\" class=\"text\">" + (jade.escape((jade_interp = tweet.text) == null ? '' : jade_interp)) + "</div><div id=\"time\" class=\"time right time\">" + (jade.escape((jade_interp = tweet.created_at) == null ? '' : jade_interp)) + "</div></div></div>");}("tweet" in locals_for_with?locals_for_with.tweet:typeof tweet!=="undefined"?tweet:undefined,"to" in locals_for_with?locals_for_with.to:typeof to!=="undefined"?to:undefined));;return buf.join("");
+buf.push("</div><div><div class=\"text\">" + (jade.escape((jade_interp = tweet.text) == null ? '' : jade_interp)) + "</div><div class=\"right time\">" + (jade.escape((jade_interp = tweet.created_at) == null ? '' : jade_interp)) + "</div></div></div>");}.call(this,"tweet" in locals_for_with?locals_for_with.tweet:typeof tweet!=="undefined"?tweet:undefined,"to" in locals_for_with?locals_for_with.to:typeof to!=="undefined"?to:undefined));;return buf.join("");
 };
 },{"jade/runtime":2}]},{},[1]);

@@ -67,7 +67,7 @@ module.exports = {
     },
 
     getTopPraisers: function(limit, callback) {
-        db().get('users').find({}, {limit: limit, sort: { praise : -1 }}, function(err, docs) {
+        db().get('users').find({}, {limit: limit, sort: { praiseCount : -1 }}, function(err, docs) {
             if (err) {
                 console.error("[DB READ ERROR: TOP PRAISERS] " + err);
             }
@@ -75,7 +75,7 @@ module.exports = {
         });
     },
     getTopPraised: function(limit, callback) {
-        db().get('users').find({}, {limit: limit, sort: { praised : -1 }}, function(err, docs) {
+        db().get('users').find({}, {limit: limit, sort: { praisedCount : -1 }}, function(err, docs) {
             if (err) {
                 console.error("[DB READ ERROR: TOP PRAISED] " + err);
             }
@@ -149,6 +149,10 @@ module.exports = {
     },
 
     close: function() {
-        db().close();
+        if (dbHolder) {
+            dbHolder.close();
+            dbHolder = undefined;
+        }
+        console.log('DB connection closed');
     }
 };

@@ -83,9 +83,11 @@ a {
 }
 
 .tweet {
-    font-family: "Lucida Grande", Helvetica, Arial, sans-serif;
     width: 100%;
     float: left;
+}
+
+.box {
     background: #FFF;
     margin: 1px;
     border: 1px solid #E2725B;
@@ -134,6 +136,15 @@ a {
 
 .right {
     float: right;
+}
+
+.wide {
+    width: 100%;
+}
+
+.half {
+    width: 50%;
+    display: inline-block;
 }
 
 .time {
