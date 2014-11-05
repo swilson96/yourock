@@ -21,9 +21,7 @@ module.exports = {
     testSingleUser: function (test) {
         this.mockTwitter.showUser = function (name, callback) {
             test.equal("thestarvis", name, "Who?");
-            callback(null, [
-                { screen_name: name, profile_image_url: "url"}
-            ]);
+            callback(null, { screen_name: name, profile_image_url: "url"});
         };
         mentionBuilder.buildMentions(
             [ {screen_name: "thestarvis"} ],
