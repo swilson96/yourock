@@ -1,3 +1,5 @@
+"use strict";
+
 var monk = require('monk');
 var _ = require('lodash-node');
 var twitter = require('../src/Twitter');
@@ -24,7 +26,7 @@ var getDecoratedUser = function(id, callback) {
     twitter.showUser(id, function(err, user) {
         decorateUser(user, callback);
     });
-}
+};
 
 var getAllUsers = function(callback) {
     db().get('users').find({}, {}, function(err, docs) {
@@ -35,41 +37,14 @@ var getAllUsers = function(callback) {
     })
 };
 
-var refreshUsers = function() {
-    twitter.getUsers(function(err, twitterIds) {
-        getAllUsers(function(err, oldUsers) {
-            oldUsers.forEach(function(oldUser) {
-                var match = _.find(twitterIds, function(id) { return id = oldUser.id});
-                if (match) {
-                    twitterIds = _.remove(twitterIds, function(id) { return id = oldUser.id})
-                    getDecoratedUser(match, function(decorated) {
-                        db().get('users').update({id: decorated.id}, decorated);
-                    })
-                } else {
-                    console.log(oldUser.screen_name + " has left us!");
-                    db().get('users').remove({id: oldUser.id}, { justOne: true });
-                }
-            });
-
-            twitterIds.forEach(function(id) {
-                getDecoratedUser(id, function(decorated) {
-                    console.log(decorated.screen_name + " has joined our mighty army");
-                    db().get('users').insert(decorated);
-                });
-            });
-
-            console.log("Users have been refreshed.");
-        });
-    });
-};
-
-setInterval(refreshUsers, 10 * 60 * 1000);
-
 module.exports = {
-    storeTweet: function(tweet) {
+    storeTweet: function(tweet, callback) {
         db().get('tweets').insert(tweet, function(err) {
             if (err) {
                 console.error("[DB WRITE ERROR] " + err);
+            }
+            if (callback) {
+                callback(err);
             }
         });
     },
@@ -142,7 +117,36 @@ module.exports = {
             callback(err, user[0]);
         })
     },
-    refreshUsers: refreshUsers,
+    refreshUsers: function(callback) {
+        twitter.getUsers(function(err, twitterIds) {
+            getAllUsers(function(err, oldUsers) {
+                oldUsers.forEach(function(oldUser) {
+                    var match = _.find(twitterIds, function(id) { return id === oldUser.id});
+                    if (match) {
+                        _.remove(twitterIds, function(id) { return id === match});
+                        getDecoratedUser(match, function(decorated) {
+                            db().get('users').update({id: decorated.id}, decorated);
+                        })
+                    } else {
+                        console.log(oldUser.screen_name + " has left us!");
+                        db().get('users').remove({id: oldUser.id}, { justOne: true });
+                    }
+                });
+
+                twitterIds.forEach(function(id) {
+                    getDecoratedUser(id, function(decorated) {
+                        console.log(decorated.screen_name + " has joined our mighty army");
+                        db().get('users').insert(decorated);
+                    });
+                });
+
+                console.log("Users have been refreshed.");
+                if (callback) {
+                    callback();
+                }
+            });
+        });
+    },
 
     close: function() {
         db().close();

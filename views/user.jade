@@ -1,11 +1,14 @@
 div.user.tweet
     div(class="float text")
-        a(href="http://twitter.com/#{user.screen_name}")
+        a(href="https://twitter.com/#{user.screen_name}")
             img(class="profileImage", src="#{user.profile_image_url}")
     div.text
         p
             a(href="/#{user.screen_name}") #{user.name}
-        if (user.praise)
-            p Praises: #{user.praise.length}, Praised: #{user.praised.length}
+            |  (
+            a(href="https://twitter.com/#{user.screen_name}") @#{user.screen_name}
+            | )
+        if (user.praiseCount != undefined)
+            p Praises: #{user.praiseCount}, Praised: #{user.praisedCount}
 
 

@@ -8,6 +8,8 @@ var getUserData = function(username, callback) {
                 if (user) {
                     user.praise = praise;
                     user.praised = praised;
+                    user.praiseCount = praise.length;
+                    user.praisedCount = praised.length;
                 }
                 var error = null;
                 if (err1) {
@@ -25,14 +27,16 @@ var getUserData = function(username, callback) {
     });
 };
 
-var format = function(res, user, err) {
+var formatResponse = function(res, user, err) {
+    var model = {user: user, error: err};
+
     res.format({
         html: function(){
-            res.render('profile', {user: user, error: err});
+            res.render('profile', model);
         },
 
         json: function(){
-            res.send({user: user, error: err});
+            res.send(model);
         }
     });
 };
@@ -53,11 +57,12 @@ module.exports = {
                         return;
                     }
                     user.followsYouRock = false;
-                    format(res, user, err)
+                    formatResponse(res, user, err)
                 });
             } else {
+                console.log('returning user from DB with praiseCount ' + user.praiseCount);
                 user.followsYouRock = true;
-                format(res, user, err)
+                formatResponse(res, user, err)
             }
         });
     }

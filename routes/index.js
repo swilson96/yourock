@@ -1,4 +1,4 @@
-var twitter = require('../src/Twitter');
+var tweetStore = require('../src/TweetStore');
 var mentionBuilder = require('../src/MentionBuilder');
 
 module.exports = {
@@ -6,21 +6,12 @@ module.exports = {
      * GET home page.
      */
     index: function (req, res) {
-        twitter.getUsers(function(err, ids) {
-            if (err) {
-                res.render('index', {users: [], error: err});
-            }
-            if (!ids) {
-                ids = [];
+        tweetStore.getAllUsers(function(err, users) {
+            if (!users) {
+                users = [];
             }
 
-            // Slight abuse of the mention builder, it calls twitter with what it thinks is the screen name,
-            // but which could equally be the user ID
-            var users = ids.map(function(id){ return {screen_name: id};});
-            mentionBuilder.buildMentions(users, function (followers) {
-                var model = { users: followers };
-                res.render('index', model);
-            });
+            res.render('index', {users: users, error: err});
         });
     }
 };

@@ -6,8 +6,9 @@ block content
     include user
     if (user.followsYouRock)
         div
-            p #{user.screen_name} follows&nbsp;
+            p #{user.name} follows
+                |  
                 a(href="https://twiter.com/YouRockSite") @YouRockSite
-                | &nbsp;on Twitter.
+                |  on Twitter.
 
 
