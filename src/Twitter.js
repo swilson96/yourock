@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 
 var ntwitter = require("ntwitter");
 
@@ -33,6 +33,7 @@ var TwitterProxy = function(populatedNodeTwitter) {
     this.stream = function(filter, object, callback) {
         this.ntwitter.stream(filter, object, callback);
     };
+    
     this.showUser = function(id, callback) {
         this.ntwitter.showUser(id, function(err, users) {
             if (users.length > 1) {
@@ -41,8 +42,16 @@ var TwitterProxy = function(populatedNodeTwitter) {
             callback(err, users[0]);
         });
     };
+    
     this.getFollowersIds = function(id, callback) {
         this.ntwitter.getFollowersIds(id, callback);
+    };
+    
+    this.createFavorite = function(id, callback) {
+        if (!callback) {
+            callback = function() {};
+        }
+        this.ntwitter.createFavorite(id, {}, callback);
     };
 };
 

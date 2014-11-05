@@ -7,7 +7,9 @@ var http = require('http');
 var path = require('path');
 var io = require('socket.io');
 
-var twitterListener = require('./src/TwitterListener');
+var TwitterListener = require('./src/TwitterListener');
+var twitterListener = new TwitterListener();
+var eventManager = require('./src/EventManager');
 
 var routes = require('./routes/index');
 var profile = require('./routes/profile');
@@ -58,8 +60,8 @@ sockets.configure(function () {
     sockets.set('transports', ['xhr-polling']);
     sockets.set('polling duration', 10);
 });
-
-twitterListener.start(sockets);
+eventManager.hookUp(twitterListener, sockets);
+twitterListener.start();
 
 // Thunderbirds are go
 server.listen(app.get('port'), function () {

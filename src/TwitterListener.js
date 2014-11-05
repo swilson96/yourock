@@ -1,22 +1,17 @@
-"use strict"
+"use strict";
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
 
 var twitter = require('../src/Twitter');
 var mentionBuilder = require('../src/MentionBuilder');
-var tweetStore = require('../src/TweetStore');
 
-var TwitterListener = function(sockets) {
+var TwitterListener = function() {
+    EventEmitter.call(this);
+    
     this.tag = '#yourock';
-    this.sockets = sockets;
 
     this.start = function () {
         var listener = this;
-
-        // If the client just connected, give them a bunch of recent praises
-        this.sockets.sockets.on('connection', function (socket) {
-            tweetStore.getRecentTweets(5, function(e, docs) {
-                socket.emit('connection', docs);
-            });
-        });
 
         // Tell the twitter API to filter on the hashtag
         twitter.stream('statuses/filter', { track: [ this.tag ] }, function (stream) {
@@ -32,10 +27,7 @@ var TwitterListener = function(sockets) {
                     mentionBuilder.buildMentions(tweet.entities.user_mentions, function (users) {
                         update.to = users;
                         listener.setHtmlString(update);
-
-                        // TODO: notify event listeners instead of doing these things directly.
-                        listener.sockets.sockets.emit('data', update);
-                        tweetStore.storeTweet(update);
+                        listener.emit('newTweet', update);
                     });
                 }
             });
@@ -96,9 +88,6 @@ var TwitterListener = function(sockets) {
     };
 };
 
- module.exports = {
-    start: function (sockets) {
-        var listener = new TwitterListener(sockets);
-        listener.start();
-    }
-};
+util.inherits(TwitterListener, EventEmitter);
+
+ module.exports = TwitterListener;
