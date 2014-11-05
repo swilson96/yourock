@@ -1,5 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
 var $ = require('jquery');
+var tweetTemplate = require("../views/tweet.jade");
 
 var socket = io.connect(window.location.hostname);
 var alreadyConnected = false;
@@ -31,8 +33,6 @@ socket.on('data', function (data) {
     removeOldestTweet();
 });
 
-var tweetTemplate = require("../views/tweet.jade");
-
 var appendTweet = function (data) {
     var tweet = $(tweetTemplate(data));
     tweet.find('.text').html(data.htmlText);
@@ -45,10 +45,15 @@ var formatTweetDate = function(tweet) {
 };
 
 var removeOldestTweet = function () {
-    $('#tweets > .tweet:last-child').slideUp('slow');
+    $('#tweets > .tweet:visible:last').slideUp('slow');
 };
 
 var toast = function(data) {
+    var toast = $('#toast');
+    if (toast.is(':visible')) {
+        toast.toggle('slide');
+    }
+    
     var tweet = $(tweetTemplate(data));
     tweet.find('.text').html(data.htmlText);
     tweet.find('.time').text(formatTweetDate(data.tweet));
@@ -57,7 +62,7 @@ var toast = function(data) {
     toastContent.html('');
     tweet.appendTo(toastContent);
 
-    $('#toast').toggle('slide');
+    toast.toggle('slide');
 };
 },{"../views/tweet.jade":4,"jquery":3}],2:[function(require,module,exports){
 (function (global){

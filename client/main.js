@@ -1,4 +1,6 @@
+"use strict";
 var $ = require('jquery');
+var tweetTemplate = require("../views/tweet.jade");
 
 var socket = io.connect(window.location.hostname);
 var alreadyConnected = false;
@@ -30,8 +32,6 @@ socket.on('data', function (data) {
     removeOldestTweet();
 });
 
-var tweetTemplate = require("../views/tweet.jade");
-
 var appendTweet = function (data) {
     var tweet = $(tweetTemplate(data));
     tweet.find('.text').html(data.htmlText);
@@ -44,10 +44,15 @@ var formatTweetDate = function(tweet) {
 };
 
 var removeOldestTweet = function () {
-    $('#tweets > .tweet:last-child').slideUp('slow');
+    $('#tweets > .tweet:visible:last').slideUp('slow');
 };
 
 var toast = function(data) {
+    var toast = $('#toast');
+    if (toast.is(':visible')) {
+        toast.toggle('slide');
+    }
+    
     var tweet = $(tweetTemplate(data));
     tweet.find('.text').html(data.htmlText);
     tweet.find('.time').text(formatTweetDate(data.tweet));
@@ -56,5 +61,5 @@ var toast = function(data) {
     toastContent.html('');
     tweet.appendTo(toastContent);
 
-    $('#toast').toggle('slide');
+    toast.toggle('slide');
 };
