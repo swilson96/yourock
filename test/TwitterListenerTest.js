@@ -57,7 +57,7 @@ module.exports = {
         twitterListener.start();
     },
     retweetsAreInvalid: function (test) {
-        //tweet.retweeted_status = true;
+        tweet.retweeted_status = true;
 
         twitterListener.on("newTweet", function (tweet) {
             test.ok(false, "Should not emit a retweet");
