@@ -23,7 +23,7 @@ var decorateUser = function(user, callback) {
 };
 
 var getDecoratedUser = function(id, callback) {
-    twitter.showUser(id, function(err, user) {
+    twitter.showUserById(id, function(err, user) {
         decorateUser(user, callback);
     });
 };
@@ -120,7 +120,7 @@ module.exports = {
     refreshUsers: function(callback) {
         twitter.getUsers(function(err, twitterIds) {
             getAllUsers(function(err, oldUsers) {
-                oldUsers.forEach(function(oldUser) {
+                (oldUsers || []).forEach(function(oldUser) {
                     var match = _.find(twitterIds, function(id) { return id === oldUser.id});
                     if (match) {
                         _.remove(twitterIds, function(id) { return id === match});
@@ -133,7 +133,7 @@ module.exports = {
                     }
                 });
 
-                twitterIds.forEach(function(id) {
+                (twitterIds || []).forEach(function(id) {
                     getDecoratedUser(id, function(decorated) {
                         console.log(decorated.screen_name + " has joined our mighty army");
                         db().get('users').insert(decorated);

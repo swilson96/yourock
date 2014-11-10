@@ -1,6 +1,30 @@
 "use strict";
 
-var ntwitter = require("ntwitter");
+var ntwitter = require("twitter");
+
+var wrapCallbackForNewApi = function(callback) {
+    return function (result) {
+        console.log("result: " + result);
+        if (Array.isArray(result)) {
+            callback(null, result);
+        } else {
+            callback(result);
+        }
+    };
+};
+
+var showUserCallback = function(callback) {
+    return function(result) {
+        if (Array.isArray(result)) {
+            if (result && result.length > 1) {
+                console.error("Weird! More than one user with username/id " + id);
+            }
+            callback(null, (users && users.length > 0) ? users[0] : null);
+        } else {
+            callback(null, result);
+        }
+    }
+};
 
 var TwitterProxy = function(populatedNodeTwitter) {
     this.ntwitter = populatedNodeTwitter;
@@ -20,11 +44,11 @@ var TwitterProxy = function(populatedNodeTwitter) {
 
     this.getUsers = function(callback) {
         if(!self.users) {
-            self.ntwitter.getFollowersIds("yourocksite", function(err, ids) {
+            self.ntwitter.getFollowersIds("yourocksite", wrapCallbackForNewApi(function(err, ids) {
                 self.users = ids;
                 setInterval(refreshUsers, 2 * 60 * 1000);
                 callback(err, ids);
-            });
+            }));
         } else {
             callback(null, self.users);
         }
@@ -34,24 +58,25 @@ var TwitterProxy = function(populatedNodeTwitter) {
         this.ntwitter.stream(filter, object, callback);
     };
     
-    this.showUser = function(id, callback) {
-        this.ntwitter.showUser(id, function(err, users) {
-            if (users.length > 1) {
-                console.error("Weird! More than one user with username/id " + id);
-            }
-            callback(err, users[0]);
-        });
+    this.showUserById = function(id, callback) {
+        this.ntwitter.showUser({user_id: id}, showUserCallback(callback));
+    };
+
+    this.showUserByScreenName = function(id, callback) {
+        this.ntwitter.showUser({screen_name: id}, showUserCallback(callback));
     };
     
     this.getFollowersIds = function(id, callback) {
-        this.ntwitter.getFollowersIds(id, callback);
+        this.ntwitter.getFollowersIds(id, wrapCallbackForNewApi(callback));
     };
     
     this.createFavorite = function(id, callback) {
         if (!callback) {
-            callback = function() {};
+            callback = function(json, response) {
+                console.log("Create fave response for " + id + ", error/json: " + json + " response: " + response);
+            };
         }
-        this.ntwitter.createFavorite(id, {}, callback);
+        this.ntwitter.createFavorite({id: id}, wrapCallbackForNewApi(callback));
     };
 };
 

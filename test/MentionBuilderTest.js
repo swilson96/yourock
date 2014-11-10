@@ -10,7 +10,7 @@ module.exports = {
         callback();
     },
     testNoUsers: function (test) {
-        this.mockTwitter.showUser = function () {
+        this.mockTwitter.showUserByScreenName = function () {
             test.ok(false, "Shouldn't query twitter for no users");
         };
         mentionBuilder.buildMentions([], function (users) {
@@ -19,7 +19,7 @@ module.exports = {
         });
     },
     testSingleUser: function (test) {
-        this.mockTwitter.showUser = function (name, callback) {
+        this.mockTwitter.showUserByScreenName = function (name, callback) {
             test.equal("thestarvis", name, "Who?");
             callback(null, { screen_name: name, profile_image_url: "url"});
         };

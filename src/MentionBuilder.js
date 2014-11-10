@@ -19,7 +19,7 @@ var MentionBuilder = function(mentions, callback) {
         var mention = this.mentions[this.mentionIndex];
         if (mention) {
             if (this.includeMention(mention)) {
-                twitter.showUser(this.mentions[this.mentionIndex].screen_name, function (err, user) {
+                twitter.showUserByScreenName(this.mentions[this.mentionIndex].screen_name, function (err, user) {
                     self.userFromTwitter(err, user);
                 });
             } else {
