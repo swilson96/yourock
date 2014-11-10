@@ -57,8 +57,7 @@ module.exports = {
         twitterListener.start();
     },
     retweetsAreInvalid: function (test) {
-        tweet = { text: "hey s/o to @theStarvis, what's up #yourock" };
-        tweet.retweeted_status = true;
+        //tweet.retweeted_status = true;
 
         twitterListener.on("newTweet", function (tweet) {
             test.ok(false, "Should not emit a retweet");
@@ -68,7 +67,7 @@ module.exports = {
         test.done();
     },
     directMessagesAreInvalid: function (test) {
-        tweet = { text: "@theStarvis, what's up #yourock" };
+        tweet.text = "@theStarvis, what's up #yourock";
 
         twitterListener.on("newTweet", function (tweet) {
             test.ok(false, "Should not emit a direct message");
