@@ -9,3 +9,4 @@ deploy:
   app: yourock
   on:
     repo: swilson96/yourock
+    node: 0.11
