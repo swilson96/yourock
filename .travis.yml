@@ -1,4 +1,11 @@
 language: node_js
 node_js:
-  - "0.11"
-  - "0.10"
+- '0.11'
+- '0.10'
+deploy:
+  provider: heroku
+  api_key:
+    secure: iQVBCSMM2wbAECcqOMPE/l6mdgiiYaiITF/AgqEAz3T40dii0gKBawdCk65gzE/fDkbHHK3UDuys9XEW325SV6iHJ5GTdisPQ9E6RozTDFNdm9RX8Fh/RgObdPxCmLZpBnc5Bb66a9DCa1/ycvGxpURFH9hF7rbRmA/YNsrZf7M=
+  app: yourock
+  on:
+    repo: swilson96/yourock
