@@ -1,16 +1,12 @@
 var rewire = require('rewire');
-var twitterListener = rewire('../src/TwitterListener');
+var TwitterListener = rewire('../src/TwitterListener');
+var twitterListener;
 
 var tweet = {};
-var sockets = {};
 var stream = {};
 
 module.exports = {
     setUp: function (callback) {
-        this.mockTweetStore = {};
-        this.mockTweetStore.getRecentTweets = function(limit, callback) { callback(null, []) };
-        this.mockTweetStore.storeTweet = function(tweet) {};
-
         tweet = {
             text: "hahahha @someone #yourock http://t.co/123 #yolo",
             entities: {
@@ -34,12 +30,6 @@ module.exports = {
             streamCallback(tweet);
         };
 
-        sockets.sockets = {};
-        sockets.sockets.on = function () {
-        };
-        sockets.sockets.emit = function () {
-        };
-
         this.mockMentionBuilder = {};
         this.mockMentionBuilder.buildMentions = function (mentions, buildCallback) {
             buildCallback([
@@ -47,11 +37,12 @@ module.exports = {
             ]);
         };
 
-        twitterListener.__set__({
+        TwitterListener.__set__({
             'twitter': this.mockTwitter,
-            'mentionBuilder': this.mockMentionBuilder,
-            'tweetStore': this.mockTweetStore
+            'mentionBuilder': this.mockMentionBuilder
         });
+
+        twitterListener = new TwitterListener();
 
         callback();
     },
@@ -63,105 +54,104 @@ module.exports = {
             test.done();
         };
 
-        twitterListener.start(sockets);
+        twitterListener.start();
     },
     retweetsAreInvalid: function (test) {
         tweet = { text: "hey s/o to @theStarvis, what's up #yourock" };
         tweet.retweeted_status = true;
 
-        sockets.sockets.emit = function () {
-            test.ok(false, "Should not emit a direct message");
-        };
+        twitterListener.on("newTweet", function (tweet) {
+            test.ok(false, "Should not emit a retweet");
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
         test.done();
     },
     directMessagesAreInvalid: function (test) {
         tweet = { text: "@theStarvis, what's up #yourock" };
 
-        sockets.sockets.emit = function () {
+        twitterListener.on("newTweet", function (tweet) {
             test.ok(false, "Should not emit a direct message");
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
         test.done();
     },
     praisesToNoOneAreInvalid: function (test) {
         tweet = {text: "hahahha #yourock", entities: {user_mentions: []} };
 
-        sockets.sockets.emit = function () {
+        twitterListener.on("newTweet", function (tweet) {
             test.ok(false, "Should not emit a praise to noone");
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
         test.done();
     },
     tweetsContainAllTheRightStuff: function (test) {
-        sockets.sockets.emit = function (type, data) {
-            test.equal("data", type);
+        twitterListener.on("newTweet", function (data) {
             test.equal(tweet.text, data.tweet.text);
             test.done();
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
     },
     htmlTextLinksMentions: function (test) {
-        sockets.sockets.emit = function (type, data) {
-            console.log(data.htmlText);
-            test.notEqual(-1, data.htmlText.indexOf("@someone"));
-            test.notEqual(-1, data.htmlText.indexOf("<a href="));
-            test.notEqual(-1, data.htmlText.indexOf("twitter.com/someone"));
+        twitterListener.on("newTweet", function (tweet) {
+            console.log(tweet.htmlText);
+            test.notEqual(-1, tweet.htmlText.indexOf("@someone"));
+            test.notEqual(-1, tweet.htmlText.indexOf("<a href="));
+            test.notEqual(-1, tweet.htmlText.indexOf("twitter.com/someone"));
             test.done();
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
     },
     htmlTextLinksHashtags: function (test) {
-        sockets.sockets.emit = function (type, data) {
+        twitterListener.on("newTweet", function (data) {
             console.log(data.htmlText);
             test.notEqual(-1, data.htmlText.indexOf("#yourock"));
             test.notEqual(-1, data.htmlText.indexOf("#yolo"));
             test.notEqual(-1, data.htmlText.indexOf("twitter.com/search?q=%23yolo&src=hash"));
             test.done();
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
     },
     htmlTextContainsHyperLinks: function (test) {
-        sockets.sockets.emit = function (type, data) {
+        twitterListener.on("newTweet", function (data) {
             console.log(data.htmlText);
             test.notEqual(-1, data.htmlText.indexOf(">a.b.com/url<"));
             test.notEqual(-1, data.htmlText.indexOf("http://t.co/123"));
             test.done();
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
     },
     htmlTextContainsMediaLinks: function (test) {
         tweet.entities.urls = [];
         tweet.entities.media = [{url: "http://t.co/123", display_url: "pic.mockTwitter.com/what"}];
-        sockets.sockets.emit = function (type, data) {
+        twitterListener.on("newTweet", function (data) {
             console.log(data.htmlText);
             test.equal(-1, data.htmlText.indexOf("a.b.com/url"));
             test.notEqual(-1, data.htmlText.indexOf(">pic.mockTwitter.com/what<"));
             test.notEqual(-1, data.htmlText.indexOf("http://t.co/123"));
             test.done();
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
     },
     htmlTextContainsSymbols: function (test) {
         tweet.text = tweet.text.replace("#yolo", "$GOOG");
         tweet.entities.hashtags = [];
         tweet.entities.symbols = [ { text: "GOOG" } ];
-        sockets.sockets.emit = function (type, data) {
+        twitterListener.on("newTweet", function (data) {
             console.log(data.htmlText);
             test.notEqual(-1, data.htmlText.indexOf(">$GOOG<"));
             test.notEqual(-1, data.htmlText.indexOf("twitter.com/search?q=%24GOOG&src=ctag"));
             test.done();
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
     },
     entitiesCanBeUndefined: function (test) {
         tweet.entities.urls = undefined;
@@ -169,13 +159,13 @@ module.exports = {
         tweet.entities.mentions = undefined;
         tweet.entities.media = undefined;
         tweet.entities.symbols = undefined;
-        sockets.sockets.emit = function (type, data) {
+        twitterListener.on("newTweet", function (data) {
             test.notEqual(-1, data.htmlText.indexOf("#yourock"));
             test.done();
-        };
+        });
 
-        twitterListener.start(sockets);
-    },
+        twitterListener.start();
+    }, 
     htmlTextLinksDuplicateMentions: function (test) {
         tweet.text = "hahahha @someone #yourock yeah yeah yeah @someone yeah";
         tweet.entities.user_mentions = [
@@ -183,14 +173,14 @@ module.exports = {
             { screen_name: "someone" }
         ];
 
-        sockets.sockets.emit = function (type, data) {
+        twitterListener.on("newTweet", function (data) {
             console.log(data.htmlText);
             test.equal(2, data.htmlText.match(/@someone/g).length);
             test.equal(3, data.htmlText.match(/<a href=/g).length);
             test.equal(2, data.htmlText.match(/twitter.com\/someone/g).length);
             test.done();
-        };
+        });
 
-        twitterListener.start(sockets);
+        twitterListener.start();
     }
 };

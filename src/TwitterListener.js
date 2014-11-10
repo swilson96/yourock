@@ -90,4 +90,4 @@ var TwitterListener = function() {
 
 util.inherits(TwitterListener, EventEmitter);
 
- module.exports = TwitterListener;
+module.exports = TwitterListener;
