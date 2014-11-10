@@ -2,6 +2,13 @@
   "name": "YouRock",
   "version": "0.0.4",
   "private": true,
+  "engines" : {
+      "node" : ">=0.10.3" 
+  },
+  "repository": {
+      "type": "git",
+      "url": "http://github.com/swilson96/yourock.git"
+  },
   "scripts": {
     "watch": "watchify -t jadeify client/main.js -o public/bundles/main.js -v",
     "build": "browserify -t jadeify client/main.js -o public/bundles/main.js",
@@ -19,7 +26,6 @@
     "mongodb": "1.3.x",
     "monk": "0.7.x",
     "newrelic": "1.2.x",
-    "nodemon": "*",
     "socket.io": "0.9.x",
     "twitter": "^0.2.13",
     "watchify": "*"
@@ -27,6 +33,7 @@
   "devDependencies": {
     "nodeunit": "*",
     "jasmine-jquery": "*",
+    "nodemon": "*",
     "sinon": "*",
     "rewire": "*"
   }
