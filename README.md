@@ -5,7 +5,10 @@ A twitter-based praise webapp
 http://www.yourocksite.com/
 
 ## Environment Instructions
-You need a mongo DB running.
+You need a mongo DB running. For example:
+```
+  mongod --dbpath ./data --rest
+```
 
 Config is done through the following environment variables:
 
