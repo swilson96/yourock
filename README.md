@@ -26,6 +26,7 @@ The URI to connect to your MongoDB instance, e.g.
 (see src/Twitter.js)
 
 #### NEW_RELIC_LICENSE_KEY
+No longer needed
 (see newrelic.js)
 
 ## Run The App
