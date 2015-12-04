@@ -36,7 +36,7 @@ if ('development' == app.get('env')) {
 
 // Routing
 app.get('/', routes.index);
-app.get('/:username', profile.show);
+app.get('/user/:username', profile.show);
 
 
 var tweetStore = require('./src/TweetStore');

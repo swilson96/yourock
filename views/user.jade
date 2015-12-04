@@ -4,7 +4,7 @@ div.user.box
             img.profileImage(src="#{user.profile_image_url}")
     div.text
         p
-            a(href="/#{user.screen_name}") #{user.name}
+            a(href="/user/#{user.screen_name}") #{user.name}
             |  (
             a(href="https://twitter.com/#{user.screen_name}") @#{user.screen_name}
             | )
