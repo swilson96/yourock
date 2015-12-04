@@ -93,6 +93,13 @@ var TwitterListener = function() {
 util.inherits(TwitterListener, EventEmitter);
 
 // One single instance, so that we know we are always using the one that's hooked up to twitter.
-var instance = new TwitterListener();
+var instance = null;
 
-module.exports = instance;
+module.exports = {
+    getInstance: function() {
+        if (!instance) {
+            instance = new TwitterListener();
+        }
+        return instance;
+    }
+};

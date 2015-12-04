@@ -1,12 +1,12 @@
 var rewire = require('rewire');
-var TwitterListener = rewire('../src/TwitterListener');
 var twitterListener;
-
 var tweet = {};
 var stream = {};
 
 module.exports = {
     setUp: function (callback) {
+        var TwitterListener = rewire('../src/TwitterListener');
+
         tweet = {
             text: "hahahha @someone #yourock http://t.co/123 #yolo",
             entities: {
@@ -39,10 +39,11 @@ module.exports = {
 
         TwitterListener.__set__({
             'twitter': this.mockTwitter,
-            'mentionBuilder': this.mockMentionBuilder
+            'mentionBuilder': this.mockMentionBuilder,
+            'EventEmitter': {call: function(obj) {}}
         });
 
-        twitterListener = new TwitterListener();
+        twitterListener = TwitterListener.getInstance();
 
         callback();
     },
@@ -68,7 +69,6 @@ module.exports = {
     },
     directMessagesAreInvalid: function (test) {
         tweet.text = "@theStarvis, what's up #yourock";
-
         twitterListener.on("newTweet", function (tweet) {
             test.ok(false, "Should not emit a direct message");
         });
@@ -164,7 +164,7 @@ module.exports = {
         });
 
         twitterListener.start();
-    }, 
+    },
     htmlTextLinksDuplicateMentions: function (test) {
         tweet.text = "hahahha @someone #yourock yeah yeah yeah @someone yeah";
         tweet.entities.user_mentions = [

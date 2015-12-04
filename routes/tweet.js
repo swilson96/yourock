@@ -1,4 +1,4 @@
-var listener = require('../src/TwitterListener');
+var listener = require('../src/TwitterListener').getInstance();
 
 module.exports = {
     /*

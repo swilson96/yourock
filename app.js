@@ -5,7 +5,7 @@ var http = require('http');
 var path = require('path');
 var io = require('socket.io');
 
-var twitterListener = require('./src/TwitterListener');
+var twitterListener = require('./src/TwitterListener').getInstance();
 var eventManager = require('./src/EventManager');
 
 var routes = require('./routes/index');
