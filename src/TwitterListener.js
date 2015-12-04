@@ -10,28 +10,30 @@ var TwitterListener = function() {
     
     this.tag = '#yourock';
 
-    this.start = function () {
-        var listener = this;
+    var listener = this;
 
+    this.start = function () {
         // Tell the twitter API to filter on the hashtag
         twitter.stream('statuses/filter', { track: [ this.tag ] }, function (stream) {
 
             // We have a connection. Now watch the 'data' event for incoming tweets.
-            stream.on('data', function (tweet) {
-                // Make sure it was a valid tweet
-                if (listener.tweetIsValid(tweet)) {
-                    var update = {};
-                    update.tweet = tweet;
-
-                    // Get the user mentions: these are the praisees.
-                    mentionBuilder.buildMentions(tweet.entities.user_mentions, function (users) {
-                        update.to = users;
-                        listener.setHtmlString(update);
-                        listener.emit('newTweet', update);
-                    });
-                }
-            });
+            stream.on('data', listener.onTweet);
         });
+    };
+
+    this.onTweet = function (tweet) {
+        // Make sure it was a valid tweet
+        if (listener.tweetIsValid(tweet)) {
+            var update = {};
+            update.tweet = tweet;
+
+            // Get the user mentions: these are the praisees.
+            mentionBuilder.buildMentions(tweet.entities.user_mentions, function (users) {
+                update.to = users;
+                listener.setHtmlString(update);
+                listener.emit('newTweet', update);
+            });
+        }
     };
 
     this.tweetIsValid = function (tweet) {
@@ -90,4 +92,7 @@ var TwitterListener = function() {
 
 util.inherits(TwitterListener, EventEmitter);
 
-module.exports = TwitterListener;
+// One single instance, so that we know we are always using the one that's hooked up to twitter.
+var instance = new TwitterListener();
+
+module.exports = instance;

@@ -7,12 +7,13 @@ var http = require('http');
 var path = require('path');
 var io = require('socket.io');
 
-var TwitterListener = require('./src/TwitterListener');
-var twitterListener = new TwitterListener();
+var twitterListener = require('./src/TwitterListener');
 var eventManager = require('./src/EventManager');
 
 var routes = require('./routes/index');
 var profile = require('./routes/profile');
+var tweet = require('./routes/tweet');
+
 
 var app = express();
 
@@ -37,6 +38,7 @@ if ('development' == app.get('env')) {
 // Routing
 app.get('/', routes.index);
 app.get('/user/:username', profile.show);
+app.get('/tweet', tweet.index);
 
 
 var tweetStore = require('./src/TweetStore');
