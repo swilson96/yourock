@@ -19,16 +19,14 @@ var showUserCallback = function(callback) {
             if (result && result.length > 1) {
                 console.error("Weird! More than one user with username/id " + id);
             }
-            callback(null, (users && users.length > 0) ? users[0] : null);
+            callback(null, (result && result.length > 0) ? result[0] : null);
         } else {
             callback(null, result);
         }
     }
 };
-
 var TwitterProxy = function(populatedNodeTwitter) {
     this.ntwitter = populatedNodeTwitter;
-    this.users;
 
     var self = this;
 
