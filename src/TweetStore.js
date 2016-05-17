@@ -7,7 +7,11 @@ var twitter = require('../src/Twitter');
 var dbHolder;
 var db = function() {
     if (!dbHolder) {
-        dbHolder = monk(process.env.MONGOLAB_URI);
+        if (process.env.MONGOLAB_URI) {
+            dbHolder = monk(process.env.MONGOLAB_URI);
+        } else {
+            throw'No DB connection string, please set the MONGOLAB_URI environment variable';
+        }
     }
     return dbHolder;
 };
@@ -60,6 +64,7 @@ module.exports = {
             db().get('tweets').find({"tweet.user.id": {$in: ids}}, {limit: limit, sort: { _id : -1 }}, function(err, docs) {
                 if (err) {
                     console.error("[DB READ ERROR: RECENT USER TWEETS] " + err);
+                    docs = [];
                 }
                 callback(err, docs);
             });
@@ -70,6 +75,7 @@ module.exports = {
         db().get('users').find({}, {limit: limit, sort: { praiseCount : -1 }}, function(err, docs) {
             if (err) {
                 console.error("[DB READ ERROR: TOP PRAISERS] " + err);
+                docs = [];
             }
             callback(err, docs);
         });
@@ -78,6 +84,7 @@ module.exports = {
         db().get('users').find({}, {limit: limit, sort: { praisedCount : -1 }}, function(err, docs) {
             if (err) {
                 console.error("[DB READ ERROR: TOP PRAISED] " + err);
+                docs = [];
             }
             callback(err, docs);
         });
@@ -87,6 +94,7 @@ module.exports = {
         db().get('tweets').find({}, { limit: limit, sort: { _id : -1 }}, function(err, docs) {
             if (err) {
                 console.error("[DB READ ERROR: RECENT TWEETS] " + err);
+                docs = [];
             }
             callback(err, docs);
         });
@@ -95,6 +103,7 @@ module.exports = {
         db().get('tweets').find({"tweet.user.screen_name": username}, {sort: { _id : -1 }}, function(err, docs) {
             if (err) {
                 console.error("[DB READ ERROR: RECENT PRAISE FROM " + username + "] " + err);
+                docs = [];
             }
             callback(err, docs);
         });
